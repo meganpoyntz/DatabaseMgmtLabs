@@ -121,7 +121,69 @@ from customers inner join orders on customers.cid = orders.cid
                inner join agents on agents.aid = orders.aid
 -- this is equivalent to the previous query
 -- essentially joining the first two, taking those results and joining with the next one, taking those results and joining again, etc.
+-- inner joins are based on matching, so if there is no matching between tables, then that data will not show up in the results
+	-- e.g. Weyland-Yutani does not show up
+	-- 90% of the time inner joins are equal (there is a primary key that can match with a foreign key)
+	-- on labs, it will be asked e.g. "show all customers and all their orders" (even if they didn't make any) --> outer joins 
 -- Lab 5 uses joins, do not use subqueries
+
+-- Part 2 of Lecture
+
+select o.ordno, o.cid, o.aid, o.pid,
+       0.4 * (o.qty * p.priceUSD) as margin
+from orders o, products p
+where o.pid = p.pid
+-- queries in lab 5 and 6 that require the above math queries
+
+
+select p.*,
+       o.ordno, o.cid, o.aid, o.pid, o.qty,
+       0.4 * (o.qty * p.priceUSD) as margin
+from orders o, products p
+where o.pid = p.pid
+-- selecting p.* allows you to list all of the columns from product
+
+-- want to know the customers who live in the same city
+-- look at the snapshot by rewriting the scripts (Tiptop and ACME live in Duluth, Basics and Allied live in Dallas)
+
+SELECT c1.name, c1.city,
+       c2.name, c2.city
+FROM customers c1,
+     customers c2
+WHERE c1.city = c2.city
+  and c1.name != c2.name
+-- this is to show that you can join tables to themselves, as long as they have different aliases
+SELECT c1.name, c1.city,
+       c2.name, c2.city
+FROM customers c1,
+     customers c2
+WHERE c1.city = c2.city
+  and c1.name != c2.name
+  and c1.cid < c2.cid
+  -- this essentially tells it to get rid of the repeats
+-- answer to the question. these are customers within the same city
+
+-- OUTER JOINS
+	-- you will take ALL of the rows from one or both of the tables and show the matches from other tables where they match, and show NULL from the other tables where they dont match
+
+select *
+from customers c left outer join orders o on o.cid = c.cid
+-- LEFT because customers is on the left and orders is on the right (it depends on whatever way you write it)
+-- LEFT, RIGHT, FULL outer join. full --> give everything on left and right with nulls
+-- LEFT or RIGHT, give me everything on L or R and nulls
+-- outer joins are very good at getting nulls
+select *
+from customers c right outer join orders o on o.cid = c.cid
+-- not coming up with the 15th row because there is no order from Weylan-Yutani
+-- IT ALL DEPENDS ON WHAT DATA YOU PUT ON WHAT SIDE OF THE "__ outer join" condition
+	-- there is no difference between a right and left outer join other than the position
+select *
+from orders o right outer join customers c on c.cid = o.cid
+-- this query changed the order, but now it comes up with the 15th row of Weyland-Tutani
+
+
+
+
 
 
 
