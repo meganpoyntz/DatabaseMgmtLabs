@@ -1,4 +1,5 @@
-﻿-- Database Management Lab 3: Getting Started with SQL Queries
+﻿-- Megan Poyntz
+-- Database Management Lab 3: Getting Started with SQL Queries
 
 -- Question 1: List the ordno and dollars of all orders
 SELECT *
