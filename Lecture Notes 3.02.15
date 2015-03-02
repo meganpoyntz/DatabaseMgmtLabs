@@ -181,9 +181,57 @@ select *
 from orders o right outer join customers c on c.cid = o.cid
 -- this query changed the order, but now it comes up with the 15th row of Weyland-Tutani
 
+select *
+from orders o full outer join customers c on c.cid = o.cid
+where (c.cid is null or o.cid is null)
+-- showing the null values of the data
 
+-- New examples (without above)
 
+create view dallas_customers
+as
+  select *
+  from customers
+  where city = 'Dallas'
+-- every table from before is now known as a base table (accessible in the CAP2 data)
+-- view tables are virtual tables
+	-- a view is not a base table (there is already a table with the original information)
+	-- it only lives as the query we used to define it
+select *
+from dallas_customers
 
+create view duluth_customers
+as
+  select *
+  from customers
+  where city = 'Duluth'
 
+select *
+from duluth_customers
+-- good for breaking up data for teams (so teams dont see all the data that the owner can see)
+	-- e.g. view table of dallas data for dallas team, view table of duluth data for duluth team
+-- also gets rid of duplicate data (you never want to duplicate the data --> view gets rid of it)
+-- views are not snapshots --> the results are thrown away after you get them. you are QUERYING views, so you are not taking a snapshot.
+	-- views are always up to date
+	-- views are good for certain departments seeing certain information (not all depts. of a company need to see all info about an employee)
+
+select *
+from customers c, orders o
+where o.cid = c.cid
+  and dollars > 600
+-- then...
+create view valuableOrders
+as
+select o.*,
+       c.cid as cust_id
+from customers c, orders o
+where o.cid = c.cid
+  and dollars > 600
+
+select *
+from valuableOrders
+where mon = 'may'
+
+-- you can join views with other views, base tables, etc.
 
 
