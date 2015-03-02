@@ -121,8 +121,7 @@ from customers inner join orders on customers.cid = orders.cid
                inner join agents on agents.aid = orders.aid
 -- this is equivalent to the previous query
 -- essentially joining the first two, taking those results and joining with the next one, taking those results and joining again, etc.
-
-
+-- Lab 5 uses joins, do not use subqueries
 
 
 
