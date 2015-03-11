@@ -1,0 +1,49 @@
+﻿--Lecture Monday 03.09.2015: Review of Views and Systems Catalogs 
+
+SELECT *
+FROM pg_tables
+WHERE schemaname = 'public'
+
+SELECT *
+FROM pg_class
+WHERE relname = 'customers'
+
+-- has all information on base tables
+
+SELECT *
+FROM pg_views
+WHERE schemaname = 'public'
+
+CREATE view expensiveproducts
+as
+	SELECT *
+	FROM products
+	where priceusd > 1
+
+select *
+from expensiveproducts
+
+update products
+set priceusd = 5.07
+where pid = 'p01'
+
+select *
+from information_schema.columns
+where table_name = 'orders'
+-- this is important because these are the first relational databases that are self-documenting. this is also good because you don't have to rely on developers for documentation, you have all of it right here available to you as metadata
+-- you can find out from the system catalog whether or not a table is a base table or view table. example below:
+select *
+from information_schema.tables
+-- this works. below won't work:
+select *
+from information_schema.tables
+where table_name = 'dallasorders'
+-- nothing shows up from the query above because the view table 'dallasorders' doesn't exist
+-- you can also find out whether a table is a base or view by looking at the "EXPLAIN" command (pressing F7)
+select *
+from dallas_customers
+-- you can also find out whether a table is a base or view by trying an insert, update or delete query/command
+-- if there is anything you don't know, just answer with "System Catalog"
+
+
+
