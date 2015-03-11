@@ -44,7 +44,17 @@ WHERE cid in (
 	FROM orders
 	WHERE pid = 'p07')
 
--- Question 5: Get the pids of products NOT ordered by any customers who placed any order through agent a05.
+-- Question 5: Get the pids of products NOT ordered by any customers who placed any order through agent a05.--> don't know if this is correct
+SELECT pid
+FROM products
+WHERE pid in(
+	SELECT pid
+	FROM orders
+	WHERE cid not in(
+		SELECT cid
+		FROM orders
+		WHERE aid = 'a05'))
+
 -- Question 6: Get the name, discounts, and city for all customers who place orders through agents in Dallas or New York.
 SELECT name, discount, city
 FROM customers
@@ -56,10 +66,4 @@ WHERE cid in (
 		FROM agents
 		WHERE city = 'Dallas' OR city = 'New York'))
 
-	select *
-	from agents
-	
-
-		
-
-
+-- Question 7: Get all customers who have the same discount as that of any customers in Dallas or London
