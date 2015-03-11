@@ -67,3 +67,11 @@ WHERE cid in (
 		WHERE city = 'Dallas' OR city = 'New York'))
 
 -- Question 7: Get all customers who have the same discount as that of any customers in Dallas or London
+SELECT *
+FROM customers
+WHERE discount in(
+	SELECT discount
+	FROM customers
+	WHERE city = 'Dallas' OR city = 'London')
+
+-- Question 8: 
