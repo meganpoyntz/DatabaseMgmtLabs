@@ -2,7 +2,11 @@
 -- Database Management Lab 5: SQL Series - The Joins Three-quel
 
 -- Question 1: Show the cities of agents booking an order for a customer whose cid is 'c006'. Use joins; no subqueries.
-
+SELECT agents.city
+FROM agents INNER JOIN orders on agents.aid = orders.aid
+	    INNER JOIN customers on customers.cid = orders.cid
+	    INNER JOIN products on products.pid = orders.pid
+WHERE customers.cid = 'c006'
 
 -- Question 2: Show the pids of products ordered through any agent who makes at least one order for a customer in Kyoto, sorted by pid from highest to lowest. Use joins; no subqueries.
 SELECT distinct p.pid
@@ -23,7 +27,7 @@ WHERE cid not in (
 SELECT c.name
 FROM customers c
 LEFT OUTER JOIN orders o ON o.cid=c.cid
-WHERE ordno is null
+WHERE ordno is NULL
 
 -- Question 5: Show the names of customers who placed at least one order through an agent in their own city, along with those agent(s') names.
 SELECT distinct c.name, a.name
@@ -47,5 +51,4 @@ WHERE c.city in (
 	FROM products p
 	GROUP BY p.city
 	ORDER BY count(p.city) ASC
-	LIMIT 1)
-
+	LIMIT 1);
