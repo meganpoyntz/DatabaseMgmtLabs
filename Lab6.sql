@@ -50,7 +50,16 @@ WHERE customers.cid = orders.cid
 -- Question 6: Write a query to check the accuracy of the dollars column in the Orders table.
 -- This means calculating Orders.dollars from data in other tables and comparing those values to the values in Orders.dollars.
 -- Display all rows in Orders where Orders.dollars is incorrect, if any.
-
+SELECT orders.dollars AS ORIGINAL , a.RECALCULATED
+FROM orders
+FULL OUTER JOIN (SELECT orders.ordno, (products.priceUSD * orders.qty ) - ((products.priceUSD * orders.qty )* (customers.discount / 100)) AS RECALCULATED
+		 FROM customers , agents , products , orders
+		 WHERE orders.cid = customers.cid
+		 AND orders.aid = agents.aid
+		 AND orders.pid = products.pid
+		 GROUP BY orders.ordno, (products.priceUSD * orders.qty ) - ((products.priceUSD * orders.qty )* (customers.discount / 100))
+		 ORDER BY ordno) AS a
+ON orders.ordno = a.ordno
 
 -- Question 7: What’s the difference between a LEFT OUTER JOIN and a RIGHT OUTER JOIN?
 -- Give example queries in SQL to demonstrate. (Feel free to use the CAP2 database t make your points here.)
