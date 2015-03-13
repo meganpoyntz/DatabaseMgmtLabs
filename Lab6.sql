@@ -40,7 +40,7 @@ ORDER BY a.name DESC
 
 -- Question 5: Display the names of all customers who bought products from agents based in Tokyo along with the names of the products they ordered,
 -- and the names of the agents who sold it to them.
-SELECT customers.name, agents.name, products.name
+SELECT customers.name AS "Customer Name", agents.name AS "Agent Name", products.name AS "Product Name"
 FROM customers, agents, products, orders
 WHERE customers.cid = orders.cid
 	AND agents.aid = orders.aid
@@ -50,21 +50,30 @@ WHERE customers.cid = orders.cid
 -- Question 6: Write a query to check the accuracy of the dollars column in the Orders table.
 -- This means calculating Orders.dollars from data in other tables and comparing those values to the values in Orders.dollars.
 -- Display all rows in Orders where Orders.dollars is incorrect, if any.
-SELECT orders.dollars AS ORIGINAL , a.RECALCULATED
-FROM orders
-FULL OUTER JOIN (SELECT orders.ordno, (products.priceUSD * orders.qty ) - ((products.priceUSD * orders.qty )* (customers.discount / 100)) AS RECALCULATED
-		 FROM customers , agents , products , orders
-		 WHERE orders.cid = customers.cid
-		 AND orders.aid = agents.aid
-		 AND orders.pid = products.pid
-		 GROUP BY orders.ordno, (products.priceUSD * orders.qty ) - ((products.priceUSD * orders.qty )* (customers.discount / 100))
-		 ORDER BY ordno) AS a
-ON orders.ordno = a.ordno
+SELECT o.ordno AS "Order Number", o.dollars "Price", ((p.priceUSD * o.qty) - (c.discount / 100) * (p.priceUSD * o.qty)) AS "Price Check"
+FROM orders o, products p, customers c
+WHERE o.cid = c.cid
+AND o.pid = p.pid
+AND o.dollars != ((p.priceUSD * o.qty) - (c.discount / 100) * (p.priceUSD * o.qty))
+ORDER BY o.ordno ASC;
 
 -- Question 7: What’s the difference between a LEFT OUTER JOIN and a RIGHT OUTER JOIN?
 -- Give example queries in SQL to demonstrate. (Feel free to use the CAP2 database t make your points here.)
 
-
-
-
-
+-- When it comes to outer joins, you take all of the rows from one or both of the tables you are joining and show the data from the other tables they match up to,
+-- including NULLs from the tables where the data does not match up. In outer joins, all of the data is shown,
+-- regardless of whether or not it can be cross-referenced or matched.
+-- The difference between left and right outer joins lies in the way the query is written and its position.
+-- Say you have written a query to combine the customers and orders table. If you are specifying the foreign key in each table (e.g. customers.cid and orders.cid),
+-- then the command is broken up into two parts; the left being “customers” or “orders” and the right being “cid.”
+-- In a left outer join, the words on the left of the statement (in this case, “customers” and “orders”) would be combined, and only those.
+-- Similarly, if you were to do a right outer join, then the word(s) on the right of the statement would be combined.
+-- Below are two queries that show a left and right outer join. 
+-- Left outer join:
+SELECT *
+FROM customers c LEFT OUTER JOIN orders o ON o.cid = c.cid
+-- this shows all the data from the left part of the statements (including NULLS)
+-- Right outer join:
+SELECT *
+FROM customers c RIGHT OUTER JOIN orders o ON o.cid = c.cid
+-- this shows the data for the right part of the statements
