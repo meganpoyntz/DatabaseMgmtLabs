@@ -403,6 +403,26 @@ SELECT distinct c.cust_id, c.firstName, c.lastName, reg.cust_id, reg.offering_id
 FROM ClubCustomers c, Registration reg
 WHERE c.cust_id = reg.cust_id
 
+CREATE VIEW CustMemberships AS
+SELECT m.membershipName, m.membershipPriceUSD, c.firstName, c.lastName
+FROM Memberships m, ClubCustomers c
+WHERE m.memb_id = c.memb_id
+SELECT *
+FROM CustMemberships
+
+CREATE VIEW CustomerLookUp AS
+SELECT DISTINCT
+   c.firstName,
+   c.lastName,
+   r.cust_id,
+   r.offering_id
+FROM
+   ClubCustomers c,
+   Registration r
+WHERE c.cust_id = r.cust_id
+SELECT *
+FROM CustomerLookUp
+
 --Stored Procedure--
 CREATE OR REPLACE FUNCTION membMthlyPriceUSD() returns trigger
 as $$
